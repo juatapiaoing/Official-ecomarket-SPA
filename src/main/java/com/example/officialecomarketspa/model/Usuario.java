@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private int id;
 
     @Column(unique = true, nullable = false)
@@ -39,11 +42,18 @@ public class Usuario {
     @Column(unique = false, nullable = true)
     private String password;
 
-    @Column(unique = false, nullable = true)
+    @Enumerated(EnumType.STRING)
+    @Column(unique = false, nullable = true,  length = 20)
     private Rol role;
 
     @Column(unique = false, nullable = true)
     private String uniquePassword;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<Orden> ordenList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<Factura> facturaList = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
